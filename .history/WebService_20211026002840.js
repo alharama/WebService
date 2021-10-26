@@ -154,7 +154,7 @@ service.get('/songs/:artist', (request, response) =>{
 });
 
 
-service.patch('/:song/favorite' , (request, response) => {
+service.patch('/:song/:id/favorite' , (request, response) => {
 
     var provSong = request.song.substr(1);
     var curSong = provSong.replace(/_/g, ' ');
