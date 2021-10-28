@@ -1,13 +1,7 @@
 const express = require('express');
-const fs = require('fs');
-const mysql = require('mysql');
-const json = fs.readFileSync('credentials.json', 'utf8');
-const credentials = JSON.parse(json);
-
-var musicMap = new Map();
 var count = 0;
 
-
+var musicMap = new Map();
 const service = express();
 service.use(express.json());
 
@@ -162,7 +156,7 @@ service.get('/songs/:artist', (request, response) =>{
 
 service.patch('/:song/favorite' , (request, response) => {
 
-    var provSong = request.params.song.substr(1);
+    var provSong = request.song.substr(1);
     var curSong = provSong.replace(/_/g, ' ');
 
     if(!musicMap.has(curSong)) {
@@ -177,7 +171,7 @@ service.patch('/:song/favorite' , (request, response) => {
         const curFav = musicMap.get(curSong)[1] + 1;
         const curArtist = musicMap.get(curSong)[2];
         const curGen = musicMap.get(curSong)[3];
-        musicMap.set(curSong, [curID, curFav, curArtist, curGen]);
+        musicMap.put(curSong, [curID, curFav, curArtist, curGen]);
 
         response.json({
             ok: true,
@@ -191,11 +185,7 @@ service.patch('/:song/favorite' , (request, response) => {
 });
 
 
-service.delete('/:song', (request , response) => {
 
-    
-
-});
 
 
 

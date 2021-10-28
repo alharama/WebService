@@ -177,7 +177,7 @@ service.patch('/:song/favorite' , (request, response) => {
         const curFav = musicMap.get(curSong)[1] + 1;
         const curArtist = musicMap.get(curSong)[2];
         const curGen = musicMap.get(curSong)[3];
-        musicMap.set(curSong, [curID, curFav, curArtist, curGen]);
+        musicMap.put(curSong, [curID, curFav, curArtist, curGen]);
 
         response.json({
             ok: true,
@@ -191,11 +191,7 @@ service.patch('/:song/favorite' , (request, response) => {
 });
 
 
-service.delete('/:song', (request , response) => {
 
-    
-
-});
 
 
 

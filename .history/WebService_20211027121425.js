@@ -191,11 +191,7 @@ service.patch('/:song/favorite' , (request, response) => {
 });
 
 
-service.delete('/:song', (request , response) => {
 
-    
-
-});
 
 
 

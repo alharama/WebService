@@ -1,0 +1,6 @@
+DROP TABLE IF EXISTS music;
+
+CREATE TABLE music (
+
+
+);
