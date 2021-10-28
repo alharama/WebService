@@ -4,14 +4,6 @@ const mysql = require('mysql');
 const json = fs.readFileSync('credentials.json', 'utf8');
 const credentials = JSON.parse(json);
 
-const connection = mysql.createConnection(credentials);
-connection.connect(error => {
-    if (error) {
-      console.error(error);
-      process.exit(1);
-    }
-  });
-
 var musicMap = new Map();
 var count = 0;
 
@@ -39,8 +31,8 @@ service.post('/:song', (request, response) => {
         musicMap.set(curSong, [count, 0, curArtist, curGenre]);
         count+=1; 
 
-        const insertQuery = 'INSERT INTO music(song,id,favorites,artist,genre) VALUES (?, ?, ?, ?, ?)';
-        const parameters = [curSong, count, 0, curArtist, curGenre];
+        const insertQuery = 'INSERT INTO music(song, id, favorites, artist, genre) VALUES (?, ?, ?, ?, ?, ?)';
+        const parameters = [curSong, count, curArtist, curGenre];
 
         connection.query(insertQuery, parameters, (error, result) => {
             if (error) {

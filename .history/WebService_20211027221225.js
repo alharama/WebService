@@ -4,14 +4,6 @@ const mysql = require('mysql');
 const json = fs.readFileSync('credentials.json', 'utf8');
 const credentials = JSON.parse(json);
 
-const connection = mysql.createConnection(credentials);
-connection.connect(error => {
-    if (error) {
-      console.error(error);
-      process.exit(1);
-    }
-  });
-
 var musicMap = new Map();
 var count = 0;
 
@@ -36,38 +28,21 @@ service.post('/:song', (request, response) => {
     } else {
       
 
-        musicMap.set(curSong, [count, 0, curArtist, curGenre]);
-        count+=1; 
+      musicMap.set(curSong, [count, 0, curArtist, curGenre]);
+      count+=1; 
 
-        const insertQuery = 'INSERT INTO music(song,id,favorites,artist,genre) VALUES (?, ?, ?, ?, ?)';
-        const parameters = [curSong, count, 0, curArtist, curGenre];
-
-        connection.query(insertQuery, parameters, (error, result) => {
-            if (error) {
-                
-                console.log(error);
-                response.json({
-                    ok: false,
-                    results: 'not added'
-                }) 
-                
-            } else {
-                response.json({
-                    ok: true,
-                    results: {
-                      song: curSong,
-                      id: musicMap.get(curSong)[0],
-                      favorites: musicMap.get(curSong)[1],
-                      artist: musicMap.get(curSong)[2],
-                      genre: musicMap.get(curSong)[3],
-                  
-                    }
-                
-                })
-                
-            }
-            
-          });
+      response.json({
+        ok: true,
+        results: {
+          song: curSong,
+          id: musicMap.get(curSong)[0],
+          favorites: musicMap.get(curSong)[1],
+          artist: musicMap.get(curSong)[2],
+          genre: musicMap.get(curSong)[3],
+          
+        }
+        
+      })
 
       
     }

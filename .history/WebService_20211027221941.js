@@ -39,8 +39,8 @@ service.post('/:song', (request, response) => {
         musicMap.set(curSong, [count, 0, curArtist, curGenre]);
         count+=1; 
 
-        const insertQuery = 'INSERT INTO music(song,id,favorites,artist,genre) VALUES (?, ?, ?, ?, ?)';
-        const parameters = [curSong, count, 0, curArtist, curGenre];
+        const insertQuery = 'INSERT INTO music(song, id, favorites, artist, genre) VALUES (?, ?, ?, ?, ?, ?)';
+        const parameters = [curSong, count, curArtist, curGenre];
 
         connection.query(insertQuery, parameters, (error, result) => {
             if (error) {
