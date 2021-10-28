@@ -73,7 +73,7 @@ service.get('/:song', (request, response) =>{
     if(!musicMap.has(curSong)) {
         response.json({
             ok: false,
-            results: `${curSong} has not been added`
+            results: '${curSong} has not been added'
         })
     } else {
 
@@ -96,22 +96,22 @@ service.get('/songs/artists', (request, response) =>{
     if(musicMap.size == 0) {
         response.json({
             ok: false,
-            results: `No artists added`
+            results: 'No artists added'
         })
     } else {
 
         var all_art = Array.from(musicMap.values());
-        
+        console.log("array of all artists" + all_art);
         const art_set = new Set();
 
         for(let i = 0; i < all_art.length; i++) {
             var curArtist = all_art[i] = all_art[i][2];
-            
+            console.log("current artists: " + curArtist);
             if(!art_set.has(curArtist)) {
                 art_set.add(curArtist);
             }
             
-            
+            console.log(art_set.values());
         }
 
         response.json({
@@ -131,7 +131,7 @@ service.get('/songs/:artist', (request, response) =>{
     if(musicMap.size == 0) {
         response.json({
             ok: false,
-            results: `No songs added by ${curArtist}`
+            results: 'No songs added by ${curArtist}'
         })
     } else {
 
@@ -148,7 +148,7 @@ service.get('/songs/:artist', (request, response) =>{
         if(art_songs.length == 0) {
             response.json({
                 ok: false,
-                results: `No songs added by ${curArtist}`
+                results: 'No songs added by ${curArtist}'
             })
         } else {
             response.json({
@@ -169,7 +169,7 @@ service.patch('/:song/favorite' , (request, response) => {
 
         response.json({
             ok: false,
-            results: `${curSong} not in database`
+            results: 'Song not in database ${curSong}'
         })
     } else {
 
@@ -193,57 +193,7 @@ service.patch('/:song/favorite' , (request, response) => {
 
 service.delete('/:song', (request , response) => {
 
-    var provSong = request.params.song.substr(1);
-    var curSong = provSong.replace(/_/g, ' ');
     
-    if(!musicMap.has(curSong)) {
-
-        response.json({
-            ok: false,
-            results: `${curSong} not in database`
-        })
-    } else {
-
-        
-        musicMap.delete(curSong);
-
-        response.json({
-            ok: true,
-            result: `${curSong} deleted from database`
-        })
-    }
-
-
-});
-
-service.delete('/songs/:artist', (request , response) => {
-
-    var provArtist = request.params.artist.substr(1);
-    var curArtist = provArtist.replace(/_/g, ' ');
-    
-    const art_songs = [];
-    const art = curArtist;
-    
-    for(let [key, value] of musicMap) {
-            
-        if(value[2] == art) {
-            art_songs.push(key);
-        }
-    }
-        
-    for(let i = 0; i < art_songs.length; i++) {
-        musicMap.delete(art_songs[i]);
-        
-    }
-
-    response.json({
-        ok: true,
-        result: `All songs from ${curArtist} deleted from database`
-    })
-    
-    
-
-
 
 });
 

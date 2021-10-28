@@ -73,7 +73,7 @@ service.get('/:song', (request, response) =>{
     if(!musicMap.has(curSong)) {
         response.json({
             ok: false,
-            results: `${curSong} has not been added`
+            results: '${curSong} has not been added'
         })
     } else {
 
@@ -96,7 +96,7 @@ service.get('/songs/artists', (request, response) =>{
     if(musicMap.size == 0) {
         response.json({
             ok: false,
-            results: `No artists added`
+            results: 'No artists added'
         })
     } else {
 
@@ -131,7 +131,7 @@ service.get('/songs/:artist', (request, response) =>{
     if(musicMap.size == 0) {
         response.json({
             ok: false,
-            results: `No songs added by ${curArtist}`
+            results: 'No songs added by ${curArtist}'
         })
     } else {
 
@@ -148,7 +148,7 @@ service.get('/songs/:artist', (request, response) =>{
         if(art_songs.length == 0) {
             response.json({
                 ok: false,
-                results: `No songs added by ${curArtist}`
+                results: 'No songs added by ${curArtist}'
             })
         } else {
             response.json({
@@ -169,7 +169,7 @@ service.patch('/:song/favorite' , (request, response) => {
 
         response.json({
             ok: false,
-            results: `${curSong} not in database`
+            results: '${curSong} not in database'
         })
     } else {
 
@@ -200,7 +200,7 @@ service.delete('/:song', (request , response) => {
 
         response.json({
             ok: false,
-            results: `${curSong} not in database`
+            results: '${curSong} not in database'
         })
     } else {
 
@@ -209,7 +209,7 @@ service.delete('/:song', (request , response) => {
 
         response.json({
             ok: true,
-            result: `${curSong} deleted from database`
+            result: '${curSong} deleted from database'
         })
     }
 
@@ -233,15 +233,15 @@ service.delete('/songs/:artist', (request , response) => {
         
     for(let i = 0; i < art_songs.length; i++) {
         musicMap.delete(art_songs[i]);
-        
+        console.log(art_songs[i])
     }
 
     response.json({
         ok: true,
-        result: `All songs from ${curArtist} deleted from database`
+        result: 'All songs from ${curArtist} deleted from database'
     })
     
-    
+    console.log(Array.from(musicMap.keys()));
 
 
 
