@@ -77,9 +77,9 @@ service.post("/:song", (request, response) => {
           results: `Song already added: ${curSong}`,
         });
       } else {
-        let insertQuery =
+        const insertQuery =
           "INSERT INTO music(song,favorites,artist,genre) VALUES (?, ?, ?, ?)";
-        let parameters = [curSong, 0, curArtist, curGenre];
+        const parameters = [curSong, 0, curArtist, curGenre];
 
         connection.query(insertQuery, parameters, (error, result) => {
           if (error) {
@@ -159,19 +159,6 @@ service.get("/:song", (request, response) => {
               isAdded = true;
             }
           }
-        }
-
-        if (isAdded) {
-          const songInfo = rows.map(rowToMemory);
-          response.json({
-            ok: true,
-            results: songInfo,
-          });
-        } else {
-          response.json({
-            ok: false,
-            results: `${curSong} not in database`,
-          });
         }
       }
     }

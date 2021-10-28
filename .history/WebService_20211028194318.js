@@ -170,7 +170,7 @@ service.get("/:song", (request, response) => {
         } else {
           response.json({
             ok: false,
-            results: `${curSong} not in database`,
+            results: `$(curSong) not in database`,
           });
         }
       }
