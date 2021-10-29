@@ -225,43 +225,26 @@ service.get("/songs/:artist", (request, response) => {
 service.patch("/:song/favorite", (request, response) => {
   var provSong = request.params.song.substr(1);
   var curSong = provSong.replace(/_/g, " ");
-  let isAdded = false;
 
-  const parameters = [curSong];
-  connection.query(
-    "UPDATE music SET favorites = favorites + 1 WHERE song = ?",
-    parameters,
-    (error, rows) => {
-      if (error) {
-        response.status(500);
-        response.json({
-          ok: false,
-          results: error.message,
-        });
-      } else {
-        if (Object.keys(rows).length != 0) {
-          for (var i = 0; i < Object.keys(rows).length; i++) {
-            var db_song = rows[i].song;
-            if (db_song == curSong) {
-              isAdded = true;
-            }
-          }
-        }
+  if (!musicMap.has(curSong)) {
+    response.json({
+      ok: false,
+      results: `${curSong} not in database`,
+    });
+  } else {
+    const curID = musicMap.get(curSong)[0];
+    const curFav = musicMap.get(curSong)[1] + 1;
+    const curArtist = musicMap.get(curSong)[2];
+    const curGen = musicMap.get(curSong)[3];
+    musicMap.set(curSong, [curID, curFav, curArtist, curGen]);
 
-        if (isAdded) {
-          response.json({
-            ok: true,
-            results: `Added favorite to $(curSong)`,
-          });
-        } else {
-          response.json({
-            ok: false,
-            results: `${curSong} not in database`,
-          });
-        }
-      }
-    }
-  );
+    response.json({
+      ok: true,
+      song: curSong,
+      id: curID,
+      favorites: curFav,
+    });
+  }
 });
 
 service.delete("/:song", (request, response) => {

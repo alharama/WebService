@@ -141,7 +141,7 @@ service.get("/:song", (request, response) => {
 
   const parameters = [curSong];
   connection.query(
-    "SELECT * FROM music WHERE song = ?",
+    "SELECT song FROM music WHERE song = ?",
     parameters,
     (error, rows) => {
       let isAdded = false;
@@ -160,12 +160,13 @@ service.get("/:song", (request, response) => {
             }
           }
         }
+        console.log(isAdded);
 
         if (isAdded) {
           const songInfo = rows.map(rowToMemory);
           response.json({
             ok: true,
-            results: songInfo,
+            results: rows.map(rowToMemory),
           });
         } else {
           response.json({
@@ -179,89 +180,87 @@ service.get("/:song", (request, response) => {
 });
 
 service.get("/songs/artists", (request, response) => {
-  connection.query("SELECT artist FROM music", (error, rows) => {
-    if (error) {
-      response.status(500);
-      response.json({
-        ok: false,
-        results: error.message,
-      });
-    } else {
-      const artistInfo = rows.map(rowToMemory);
-      response.json({
-        ok: true,
-        results: artistInfo,
-      });
+  if (musicMap.size == 0) {
+    response.json({
+      ok: false,
+      results: `No artists added`,
+    });
+  } else {
+    var all_art = Array.from(musicMap.values());
+
+    const art_set = new Set();
+
+    for (let i = 0; i < all_art.length; i++) {
+      var curArtist = (all_art[i] = all_art[i][2]);
+
+      if (!art_set.has(curArtist)) {
+        art_set.add(curArtist);
+      }
     }
-  });
+
+    response.json({
+      ok: true,
+      results: Array.from(art_set.values()),
+    });
+  }
 });
 
 service.get("/songs/:artist", (request, response) => {
   var provArtist = request.params.artist.substr(1);
   var curArtist = provArtist.replace(/_/g, " ");
 
-  let parameters = [curArtist];
-  connection.query(
-    "SELECT * FROM music WHERE artist = ?",
-    parameters,
-    (error, rows) => {
-      if (error) {
-        response.status(500);
-        response.json({
-          ok: false,
-          results: error.message,
-        });
-      } else {
-        const artistInfo = rows.map(rowToMemory);
-        response.json({
-          ok: true,
-          results: artistInfo,
-        });
+  if (musicMap.size == 0) {
+    response.json({
+      ok: false,
+      results: `No songs added by ${curArtist}`,
+    });
+  } else {
+    const art_songs = [];
+    const art = curArtist;
+
+    for (let [key, value] of musicMap) {
+      if (value[2] == art) {
+        art_songs.push(key);
       }
     }
-  );
+
+    if (art_songs.length == 0) {
+      response.json({
+        ok: false,
+        results: `No songs added by ${curArtist}`,
+      });
+    } else {
+      response.json({
+        ok: true,
+        results: art_songs,
+      });
+    }
+  }
 });
 
 service.patch("/:song/favorite", (request, response) => {
   var provSong = request.params.song.substr(1);
   var curSong = provSong.replace(/_/g, " ");
-  let isAdded = false;
 
-  const parameters = [curSong];
-  connection.query(
-    "UPDATE music SET favorites = favorites + 1 WHERE song = ?",
-    parameters,
-    (error, rows) => {
-      if (error) {
-        response.status(500);
-        response.json({
-          ok: false,
-          results: error.message,
-        });
-      } else {
-        if (Object.keys(rows).length != 0) {
-          for (var i = 0; i < Object.keys(rows).length; i++) {
-            var db_song = rows[i].song;
-            if (db_song == curSong) {
-              isAdded = true;
-            }
-          }
-        }
+  if (!musicMap.has(curSong)) {
+    response.json({
+      ok: false,
+      results: `${curSong} not in database`,
+    });
+  } else {
+    const curID = musicMap.get(curSong)[0];
+    const curFav = musicMap.get(curSong)[1] + 1;
+    const curArtist = musicMap.get(curSong)[2];
+    const curGen = musicMap.get(curSong)[3];
+    musicMap.set(curSong, [curID, curFav, curArtist, curGen]);
 
-        if (isAdded) {
-          response.json({
-            ok: true,
-            results: `Added favorite to $(curSong)`,
-          });
-        } else {
-          response.json({
-            ok: false,
-            results: `${curSong} not in database`,
-          });
-        }
-      }
-    }
-  );
+    response.json({
+      ok: true,
+      song: curSong,
+      id: curID,
+      favorites: curFav,
+    });
+  }
 });
 
 service.delete("/:song", (request, response) => {
@@ -310,3 +309,46 @@ const port = 8443;
 service.listen(port, () => {
   console.log(`We're live on port ${port}!`);
 });
+
+function checkIfAdded(given_song) {
+  let isAdded = false;
+
+  connection.query("SELECT song FROM music", function (err, result, fields) {
+    // if any error while executing above query, throw error
+    if (err) {
+      throw err;
+    } else {
+      if (Object.keys(result).length == 0) {
+        isAdded = false;
+      } else {
+        for (var i = 0; i < Object.keys(result).length; i++) {
+          var db_song = result[i].song;
+
+          console.log("key is " + db_song);
+          console.log("cur_song is " + given_song);
+          console.log(db_song == given_song);
+          console.log(db_song === given_song);
+          if (db_song == given_song) {
+            isAdded = true;
+          }
+        }
+        // Object.keys(result).forEach(function(key) {
+        //     var db_song = result[key].song;
+        //     var cur_song = given_song;
+        //     // console.log("key is " + db_song);
+        //     // console.log("cur_song is " + cur_song);
+        //     // console.log(db_song == db_song);
+        //     // console.log(db_song === cur_song);
+        //     if(db_song == cur_song) {
+
+        //         isAdded = true;
+        //     }
+        // });
+      }
+      console.log("isAdded is1 " + isAdded);
+      return isAdded;
+    }
+  });
+  console.log("isAdded is2 " + isAdded);
+  return isAdded;
+}

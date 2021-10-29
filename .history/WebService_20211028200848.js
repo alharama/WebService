@@ -223,9 +223,10 @@ service.get("/songs/:artist", (request, response) => {
 });
 
 service.patch("/:song/favorite", (request, response) => {
+
+
   var provSong = request.params.song.substr(1);
   var curSong = provSong.replace(/_/g, " ");
-  let isAdded = false;
 
   const parameters = [curSong];
   connection.query(
@@ -262,6 +263,34 @@ service.patch("/:song/favorite", (request, response) => {
       }
     }
   );
+});
+
+
+
+
+
+  var provSong = request.params.song.substr(1);
+  var curSong = provSong.replace(/_/g, " ");
+
+  if (!musicMap.has(curSong)) {
+    response.json({
+      ok: false,
+      results: `${curSong} not in database`,
+    });
+  } else {
+    const curID = musicMap.get(curSong)[0];
+    const curFav = musicMap.get(curSong)[1] + 1;
+    const curArtist = musicMap.get(curSong)[2];
+    const curGen = musicMap.get(curSong)[3];
+    musicMap.set(curSong, [curID, curFav, curArtist, curGen]);
+
+    response.json({
+      ok: true,
+      song: curSong,
+      id: curID,
+      favorites: curFav,
+    });
+  }
 });
 
 service.delete("/:song", (request, response) => {
