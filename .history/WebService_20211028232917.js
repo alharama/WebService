@@ -91,10 +91,10 @@ service.post("/:song", (request, response) => {
 service.get("/report.html", (request, response) => {
   const fileName = "report.html";
   fsPromises
-    .readFile(fileName, "utf8")
+    .readFile(fileName, "html")
     .then((text) => {
       response.statusCode = 200;
-      response.setHeader("Content-Type", "text/html");
+      response.setHeader("Content-Type", "text/plain");
       response.write(text);
       response.end();
     })

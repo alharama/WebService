@@ -1,7 +1,6 @@
 const express = require("express");
 const fs = require("fs");
 const mysql = require("mysql");
-const fsPromises = require("fs").promises;
 const path = require("path");
 const json = fs.readFileSync("credentials.json", "utf8");
 const credentials = JSON.parse(json);
@@ -88,24 +87,16 @@ service.post("/:song", (request, response) => {
   });
 });
 
-service.get("/report.html", (request, response) => {
-  const fileName = "report.html";
-  fsPromises
-    .readFile(fileName, "utf8")
-    .then((text) => {
-      response.statusCode = 200;
-      response.setHeader("Content-Type", "text/html");
-      response.write(text);
-      response.end();
-    })
-    .catch((error) => {
-      response.statusCode = 404;
-      response.end();
-    });
-});
-
 service.get("/songs", (request, response) => {
+  // if(musicMap.size == 0) {
+  //     response.json({
+  //         ok: false,
+  //         results: 'No songs added'
+  //     })
+  // } else {
+
   connection.query("SELECT song FROM music", function (err, result, fields) {
+    // if any error while executing above query, throw error
     if (err) {
       if (error) {
         response.status(500);

@@ -94,7 +94,7 @@ service.get("/report.html", (request, response) => {
     .readFile(fileName, "utf8")
     .then((text) => {
       response.statusCode = 200;
-      response.setHeader("Content-Type", "text/html");
+      response.setHeader("Content-Type", "text/plain");
       response.write(text);
       response.end();
     })

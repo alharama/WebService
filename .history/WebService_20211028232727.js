@@ -1,7 +1,7 @@
 const express = require("express");
 const fs = require("fs");
 const mysql = require("mysql");
-const fsPromises = require("fs").promises;
+const dnsPromises = require("dns").promises;
 const path = require("path");
 const json = fs.readFileSync("credentials.json", "utf8");
 const credentials = JSON.parse(json);
@@ -94,7 +94,7 @@ service.get("/report.html", (request, response) => {
     .readFile(fileName, "utf8")
     .then((text) => {
       response.statusCode = 200;
-      response.setHeader("Content-Type", "text/html");
+      response.setHeader("Content-Type", "text/plain");
       response.write(text);
       response.end();
     })
