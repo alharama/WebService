@@ -195,32 +195,6 @@ service.get("/songs/artists", (request, response) => {
   });
 });
 
-service.get("/songs/music/:genre", (request, response) => {
-  var provGenre = request.params.genre.substr(1);
-  var curGenre = provGenre.replace(/_/g, " ");
-
-  let parameters = [curGenre];
-  connection.query(
-    "SELECT * FROM music WHERE genre = ?",
-    parameters,
-    (error, rows) => {
-      if (error) {
-        response.status(500);
-        response.json({
-          ok: false,
-          results: error.message,
-        });
-      } else {
-        const genreInfo = rows.map(rowToMemory);
-        response.json({
-          ok: true,
-          results: genreInfo,
-        });
-      }
-    }
-  );
-});
-
 service.get("/songs/:artist", (request, response) => {
   var provArtist = request.params.artist.substr(1);
   var curArtist = provArtist.replace(/_/g, " ");
@@ -306,8 +280,8 @@ service.delete("/:song", (request, response) => {
 });
 
 service.delete("/songs/:artist", (request, response) => {
-  var provArtist = request.params.artist.substr(1);
-  var curArtist = provArtist.replace(/_/g, " ");
+  var provArtists = request.params.song.substr(1);
+  var curArtist = provSong.replace(/_/g, " ");
 
   let parameters = [curArtist];
   connection.query(

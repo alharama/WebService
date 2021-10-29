@@ -195,32 +195,6 @@ service.get("/songs/artists", (request, response) => {
   });
 });
 
-service.get("/songs/music/:genre", (request, response) => {
-  var provGenre = request.params.genre.substr(1);
-  var curGenre = provGenre.replace(/_/g, " ");
-
-  let parameters = [curGenre];
-  connection.query(
-    "SELECT * FROM music WHERE genre = ?",
-    parameters,
-    (error, rows) => {
-      if (error) {
-        response.status(500);
-        response.json({
-          ok: false,
-          results: error.message,
-        });
-      } else {
-        const genreInfo = rows.map(rowToMemory);
-        response.json({
-          ok: true,
-          results: genreInfo,
-        });
-      }
-    }
-  );
-});
-
 service.get("/songs/:artist", (request, response) => {
   var provArtist = request.params.artist.substr(1);
   var curArtist = provArtist.replace(/_/g, " ");
@@ -309,25 +283,23 @@ service.delete("/songs/:artist", (request, response) => {
   var provArtist = request.params.artist.substr(1);
   var curArtist = provArtist.replace(/_/g, " ");
 
-  let parameters = [curArtist];
-  connection.query(
-    "DELETE FROM music WHERE artist = ?",
-    parameters,
-    (error, rows) => {
-      if (error) {
-        response.status(500);
-        response.json({
-          ok: false,
-          results: error.message,
-        });
-      } else {
-        response.json({
-          ok: true,
-          results: `All songs from ${curArtist} deleted from database`,
-        });
-      }
+  const art_songs = [];
+  const art = curArtist;
+
+  for (let [key, value] of musicMap) {
+    if (value[2] == art) {
+      art_songs.push(key);
     }
-  );
+  }
+
+  for (let i = 0; i < art_songs.length; i++) {
+    musicMap.delete(art_songs[i]);
+  }
+
+  response.json({
+    ok: true,
+    result: `All songs from ${curArtist} deleted from database`,
+  });
 });
 
 const port = 8443;

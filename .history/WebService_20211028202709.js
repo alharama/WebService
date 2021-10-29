@@ -195,7 +195,7 @@ service.get("/songs/artists", (request, response) => {
   });
 });
 
-service.get("/songs/music/:genre", (request, response) => {
+service.get("/songs/:genre", (request, response) => {
   var provGenre = request.params.genre.substr(1);
   var curGenre = provGenre.replace(/_/g, " ");
 
@@ -211,10 +211,10 @@ service.get("/songs/music/:genre", (request, response) => {
           results: error.message,
         });
       } else {
-        const genreInfo = rows.map(rowToMemory);
+        const artistInfo = rows.map(rowToMemory);
         response.json({
           ok: true,
-          results: genreInfo,
+          results: artistInfo,
         });
       }
     }
@@ -306,8 +306,8 @@ service.delete("/:song", (request, response) => {
 });
 
 service.delete("/songs/:artist", (request, response) => {
-  var provArtist = request.params.artist.substr(1);
-  var curArtist = provArtist.replace(/_/g, " ");
+  var provArtists = request.params.song.substr(1);
+  var curArtist = provSong.replace(/_/g, " ");
 
   let parameters = [curArtist];
   connection.query(
