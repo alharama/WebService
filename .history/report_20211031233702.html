@@ -6,6 +6,8 @@
 
   <body>
     <header>My Web Service Report</header>
+
+    <a href="https://github.com/alharama/WebService"> My Github repository</a>
     <ol>
       <li>
         The theme of my Web Service is a music record holder with several
@@ -17,37 +19,42 @@
       </li>
       <li>The web service uses an express based service</li>
       <li>
-        The website service is available at https://project2.malharazi.me:8443/
+        I was having trouble getting the web service set up on the correct
+        website with nginx
       </li>
       <li>The endpoints and parameters are properly named as listed below</li>
       <li>The webservice accepts complex json data</li>
-      <li>The webservice supports the full spectrum of CRUD operations</li>
       <li>
-        The Webservice blocks all ports to the database and is only accessible
-        in the droplet
+        The Webservice blocks all ports outside of the droplet if created in the
+        droplet
       </li>
-      <li>The web service uses nginx for global, encrypted access</li>
-      <li>The web service contains an options wildcard</li>
-      <li>The web service uses pm2 process manager to run the service</li>
+      <li>I had trouble creating the nginx server on the droplet</li>
+      <li>
+        My service is stored in a github repository and shared with the
+        professor on slack
+      </li>
       <li>My creation and schema scripts are included in my repository</li>
     </ol>
 
     How to use the web service
     <ul>
-      <li>Operations include the following:</li>
       <li>
-        !!!!SONGS AND ARTISTS ARE CASE SENSITIVE AND MUST USE UNDERSCORES FOR
-        SPACES!!!!
+        Right now the web service isn't working correctly on the droplet but
+        works well on the local host if you would like to pull the repository
+        files
       </li>
+      <li>Operations include the following</li>
       <li>
         POST: '/:song': Takes a song with the artist and genre in the json body
         and adds it to the database
       </li>
+      <li>
+        !!!!SONGS ARE CASE SENSITIVE AND MUST USE UNDERSCORES FOR SPACES!!!!
+      </li>
       <li>An example for All of the Lights by Kanye West:</li>
       <li>
         curl --request POST --header 'Content-Type: application/json' --data
-        '{"Kanye West":"Rap"}'
-        https://project2.malharazi.me:8443/:All_Of_The_Lights
+        '{"Kanye West":"Rap"}' http://localhost:8443/:All_Of_The_Lights
       </li>
       <li>Other functions include:</li>
       <li>

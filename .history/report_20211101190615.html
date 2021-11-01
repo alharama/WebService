@@ -34,20 +34,18 @@
 
     How to use the web service
     <ul>
-      <li>Operations include the following:</li>
-      <li>
-        !!!!SONGS AND ARTISTS ARE CASE SENSITIVE AND MUST USE UNDERSCORES FOR
-        SPACES!!!!
-      </li>
+      <li>Operations include the following</li>
       <li>
         POST: '/:song': Takes a song with the artist and genre in the json body
         and adds it to the database
       </li>
+      <li>
+        !!!!SONGS ARE CASE SENSITIVE AND MUST USE UNDERSCORES FOR SPACES!!!!
+      </li>
       <li>An example for All of the Lights by Kanye West:</li>
       <li>
         curl --request POST --header 'Content-Type: application/json' --data
-        '{"Kanye West":"Rap"}'
-        https://project2.malharazi.me:8443/:All_Of_The_Lights
+        '{"Kanye West":"Rap"}' http://localhost:8443/:All_Of_The_Lights
       </li>
       <li>Other functions include:</li>
       <li>
