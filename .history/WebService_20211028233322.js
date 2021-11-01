@@ -77,7 +77,6 @@ service.post("/:song", (request, response) => {
               ok: true,
               results: {
                 song: curSong,
-                favorites: 0,
                 artist: curArtist,
                 genre: curGenre,
               },
@@ -334,7 +333,7 @@ function decodeJsonBody(request, response, next) {
   next();
 }
 
-const port = 5001;
+const port = 8443;
 service.listen(port, () => {
   console.log(`We're live on port ${port}!`);
 });
