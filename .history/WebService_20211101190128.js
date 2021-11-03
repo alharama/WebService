@@ -111,7 +111,7 @@ service.get("/report.html", (request, response) => {
 });
 
 service.get("/songs", (request, response) => {
-  connection.query("SELECT * FROM music", function (err, result, fields) {
+  connection.query("SELECT song FROM music", function (err, result, fields) {
     if (err) {
       if (error) {
         response.status(500);
