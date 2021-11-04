@@ -249,7 +249,7 @@ service.get("/songs/:artist", (request, response) => {
   );
 });
 
-service.patch("/:id", (request, response) => {
+service.patch("/:id", (request, reponse) => {
   var songID = request.params.id;
 
   var songInfo = JSON.parse(JSON.stringify(request.body));
@@ -258,14 +258,14 @@ service.patch("/:id", (request, response) => {
   const curArtist = songInfo[curSong][0];
   const curGenre = songInfo[curSong][1];
 
-  let parameters = [curSong, songID, curArtist, curGenre, songID];
+  let paramaters = [curSong, songID, curArtist, curGenre, songID];
 
   connection.query(
-    "UPDATE music SET song = ?, id = ?, favorites = 0, artist = ?, genre = ? WHERE id = ?",
+    "UPDATE music SET song = ?, id = ?, favorites = 0, artist = ?, genre = ?, where id = ?",
     parameters,
     (error, rows) => {
       if (error) {
-        response.status(500);
+        reponse.status(500);
         response.json({
           ok: false,
           results: error.message,

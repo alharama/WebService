@@ -261,11 +261,11 @@ service.patch("/:id", (request, response) => {
   let parameters = [curSong, songID, curArtist, curGenre, songID];
 
   connection.query(
-    "UPDATE music SET song = ?, id = ?, favorites = 0, artist = ?, genre = ? WHERE id = ?",
+    "UPDATE music SET song = ?, id = ?, favorites = 0, artist = ?, genre = ?, where id = ?",
     parameters,
     (error, rows) => {
       if (error) {
-        response.status(500);
+        reponse.status(500);
         response.json({
           ok: false,
           results: error.message,
