@@ -49,7 +49,7 @@
       <div>
         ex: curl --request POST --header 'Content-Type: application/json' --data
         '{"Kanye West":"Rap"}'
-        https://project2.malharazi.me:8443/All_Of_The_Lights
+        https://project2.malharazi.me:8443/:All_Of_The_Lights
       </div>
       <li>
         GET '/songs' which returns a list of all song info in the database
@@ -57,10 +57,10 @@
 
       <div>ex: curl https://project2.malharazi.me:8443/songs</div>
       <li>GET '/:song' returns the song information for the specified song</li>
-      <div>ex: curl https://project2.malharazi.me:8443/All_Of_The_Lights</div>
+      <div>ex: curl https://project2.malharazi.me:8443/:All_Of_The_Lights</div>
 
       <li>GET '/songs/:artist' returns all songs by the specified artist</li>
-      <div>ex: curl https://project2.malharazi.me:8443/songs/Kanye_West</div>
+      <div>ex: curl https://project2.malharazi.me:8443/songs/:Kanye_West</div>
 
       <li>
         GET '/songs/artists' returns a list of all artists in the database
@@ -70,21 +70,21 @@
         GET 'songs/music/:genre' returns a list of all the songs of the
         specified genre in the database
       </li>
-      <div>ex: curl https://project2.malharazi.me:8443/songs/music/Rap</div>
+      <div>ex: curl https://project2.malharazi.me:8443/songs/music/:Rap</div>
       <li>PATCH '/:song/favorite' adds a favorite to the specified song</li>
       <div>
         ex: curl --request PATCH --header 'Content-Type: application/json'
-        https://project2.malharazi.me:8443/All_Of_The_Lights/favorite
+        https://project2.malharazi.me:8443/:All_Of_The_Lights/favorite
       </div>
       <li>DELETE '/:song' deletes the specified song from the database</li>
       <div>
         ex: curl --request DELETE --header 'Content-Type: application/json'
-        https://project2.malharazi.me:8443/All_Of_The_Lights
+        https://project2.malharazi.me:8443/:All_Of_The_Lights
       </div>
       <li>DELETE '/songs/:artist' deletes all songs by the specified artist</li>
       <div>
         ex: curl --request DELETE --header 'Content-Type: application/json'
-        https://project2.malharazi.me:8443/songs/Kanye_West
+        https://project2.malharazi.me:8443/songs/:Kanye_West
       </div>
     </ul>
 
