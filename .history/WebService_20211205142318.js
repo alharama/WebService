@@ -3,6 +3,7 @@ const fs = require("fs");
 const mysql = require("mysql");
 const fsPromises = require("fs").promises;
 const path = require("path");
+var cors = require("cors");
 const json = fs.readFileSync("credentials.json", "utf8");
 const credentials = JSON.parse(json);
 var musicMap = new Map();
@@ -34,11 +35,20 @@ function rowToMemory(row) {
   };
 }
 
-service.options("*", (request, response) => {
-  response.set("Access-Control-Allow-Headers", "Content-Type");
-  response.set("Access-Control-Allow-Methods", "GET,POST,PATCH,DELETE");
-  response.sendStatus(200);
-});
+service.use(cors({ origin: "*" }));
+// service.use(function (req, res, next) {
+//   res.header("Access-Control-Allow-Origin", "*");
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With, Content-Type, Accept"
+//   );
+//   next();
+// });
+// service.options("*", (request, response) => {
+//   response.set("Access-Control-Allow-Headers", "Content-Type");
+//   response.set("Access-Control-Allow-Methods", "GET,POST,PATCH,DELETE");
+//   response.sendStatus(200);
+// });
 
 service.post("/:song", (request, response) => {
   var songR = JSON.parse(JSON.stringify(request.body));
@@ -249,7 +259,7 @@ service.get("/songs/:artist", (request, response) => {
   );
 });
 
-service.patch("/:id", (request, reponse) => {
+service.patch("/:id", (request, response) => {
   var songID = request.params.id;
 
   var songInfo = JSON.parse(JSON.stringify(request.body));
@@ -258,14 +268,14 @@ service.patch("/:id", (request, reponse) => {
   const curArtist = songInfo[curSong][0];
   const curGenre = songInfo[curSong][1];
 
-  let paramaters = [curSong, songID, curArtist, curGenre, songID];
+  let parameters = [curSong, songID, curArtist, curGenre, songID];
 
   connection.query(
-    "UPDATE music SET song = ?, id = ?, favorites = 0, artist = ?, genre = ?, where id = ?",
+    "UPDATE music SET song = ?, id = ?, favorites = 0, artist = ?, genre = ? WHERE id = ?",
     parameters,
     (error, rows) => {
       if (error) {
-        reponse.status(500);
+        response.status(500);
         response.json({
           ok: false,
           results: error.message,

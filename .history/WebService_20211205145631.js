@@ -3,6 +3,7 @@ const fs = require("fs");
 const mysql = require("mysql");
 const fsPromises = require("fs").promises;
 const path = require("path");
+var cors = require("cors");
 const json = fs.readFileSync("credentials.json", "utf8");
 const credentials = JSON.parse(json);
 var musicMap = new Map();
@@ -34,6 +35,15 @@ function rowToMemory(row) {
   };
 }
 
+// service.use(cors({ origin: "*" }));
+// service.use(function (req, res, next) {
+//   res.header("Access-Control-Allow-Origin", "*");
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With, Content-Type, Accept"
+//   );
+//   next();
+// });
 service.options("*", (request, response) => {
   response.set("Access-Control-Allow-Headers", "Content-Type");
   response.set("Access-Control-Allow-Methods", "GET,POST,PATCH,DELETE");
@@ -42,7 +52,7 @@ service.options("*", (request, response) => {
 
 service.post("/:song", (request, response) => {
   var songR = JSON.parse(JSON.stringify(request.body));
-  var provSong = request.params.song.substr(1);
+  var provSong = request.params.song;
   var curSong = provSong.replace(/_/g, " ");
   const curArtist = Object.keys(songR)[0];
   const curGenre = songR[curArtist];
@@ -74,7 +84,7 @@ service.post("/:song", (request, response) => {
           "INSERT INTO music(song,favorites,artist,genre) VALUES (?, ?, ?, ?)";
         let parameters = [curSong, 0, curArtist, curGenre];
 
-        connection.query(insertQuery, parameters, (error, result) => {
+        connection.query(insertQuery, parameters, (error) => {
           if (error) {
             throw err;
           } else {
@@ -137,7 +147,7 @@ service.get("/songs", (request, response) => {
 });
 
 service.get("/:song", (request, response) => {
-  var provSong = request.params.song.substr(1);
+  var provSong = request.params.song;
   var curSong = provSong.replace(/_/g, " ");
 
   const parameters = [curSong];
@@ -198,7 +208,7 @@ service.get("/songs/artists", (request, response) => {
 });
 
 service.get("/songs/music/:genre", (request, response) => {
-  var provGenre = request.params.genre.substr(1);
+  var provGenre = request.params.genre;
   var curGenre = provGenre.replace(/_/g, " ");
 
   let parameters = [curGenre];
@@ -224,7 +234,7 @@ service.get("/songs/music/:genre", (request, response) => {
 });
 
 service.get("/songs/:artist", (request, response) => {
-  var provArtist = request.params.artist.substr(1);
+  var provArtist = request.params.artist;
   var curArtist = provArtist.replace(/_/g, " ");
 
   let parameters = [curArtist];
@@ -249,10 +259,40 @@ service.get("/songs/:artist", (request, response) => {
   );
 });
 
+service.patch("/:id", (request, response) => {
+  var songID = request.params.id;
+
+  var songInfo = JSON.parse(JSON.stringify(request.body));
+
+  const curSong = Object.keys(songInfo)[0];
+  const curArtist = songInfo[curSong][0];
+  const curGenre = songInfo[curSong][1];
+
+  let parameters = [curSong, songID, curArtist, curGenre, songID];
+
+  connection.query(
+    "UPDATE music SET song = ?, id = ?, favorites = 0, artist = ?, genre = ? WHERE id = ?",
+    parameters,
+    (error, rows) => {
+      if (error) {
+        response.status(500);
+        response.json({
+          ok: false,
+          results: error.message,
+        });
+      } else {
+        response.json({
+          ok: true,
+          results: `${curSong} information updated`,
+        });
+      }
+    }
+  );
+});
+
 service.patch("/:song/favorite", (request, response) => {
-  var provSong = request.params.song.substr(1);
+  var provSong = request.params.song;
   var curSong = provSong.replace(/_/g, " ");
-  let isAdded = false;
 
   const parameters = [curSong];
   connection.query(
@@ -283,7 +323,7 @@ service.patch("/:song/favorite", (request, response) => {
 });
 
 service.delete("/:song", (request, response) => {
-  var provSong = request.params.song.substr(1);
+  var provSong = request.params.song;
   var curSong = provSong.replace(/_/g, " ");
 
   let parameters = [curSong];
@@ -308,7 +348,7 @@ service.delete("/:song", (request, response) => {
 });
 
 service.delete("/songs/:artist", (request, response) => {
-  var provArtist = request.params.artist.substr(1);
+  var provArtist = request.params.artist;
   var curArtist = provArtist.replace(/_/g, " ");
 
   let parameters = [curArtist];

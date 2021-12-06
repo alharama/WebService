@@ -3,6 +3,7 @@ const fs = require("fs");
 const mysql = require("mysql");
 const fsPromises = require("fs").promises;
 const path = require("path");
+var cors = require("cors");
 const json = fs.readFileSync("credentials.json", "utf8");
 const credentials = JSON.parse(json);
 var musicMap = new Map();
@@ -34,11 +35,7 @@ function rowToMemory(row) {
   };
 }
 
-service.options("*", (request, response) => {
-  response.set("Access-Control-Allow-Headers", "Content-Type");
-  response.set("Access-Control-Allow-Methods", "GET,POST,PATCH,DELETE");
-  response.sendStatus(200);
-});
+service.use(cors({ origin: "*" }));
 
 service.post("/:song", (request, response) => {
   var songR = JSON.parse(JSON.stringify(request.body));
@@ -369,7 +366,7 @@ function decodeJsonBody(request, response, next) {
   next();
 }
 
-const port = 5001;
+const port = 8443;
 service.listen(port, () => {
   console.log(`We're live on port ${port}!`);
 });

@@ -3,6 +3,7 @@ const fs = require("fs");
 const mysql = require("mysql");
 const fsPromises = require("fs").promises;
 const path = require("path");
+// var cors = require("cors");
 const json = fs.readFileSync("credentials.json", "utf8");
 const credentials = JSON.parse(json);
 var musicMap = new Map();
@@ -34,6 +35,15 @@ function rowToMemory(row) {
   };
 }
 
+// service.use(cors({ origin: "*" }));
+// service.use(function (req, res, next) {
+//   res.header("Access-Control-Allow-Origin", "*");
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With, Content-Type, Accept"
+//   );
+//   next();
+// });
 service.options("*", (request, response) => {
   response.set("Access-Control-Allow-Headers", "Content-Type");
   response.set("Access-Control-Allow-Methods", "GET,POST,PATCH,DELETE");
@@ -369,7 +379,7 @@ function decodeJsonBody(request, response, next) {
   next();
 }
 
-const port = 5001;
+const port = 8443;
 service.listen(port, () => {
   console.log(`We're live on port ${port}!`);
 });
